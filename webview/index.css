@@ -1,0 +1,21 @@
+html, body, main, .container {
+    height: 100%;
+}
+
+#landing {
+    opacity: 1;
+    transition: opacity 1s; 
+  }
+  
+  #landing.fade {
+    opacity: 0;
+  }
+
+  #home {
+    opacity: 1;
+    transition: opacity 1s; 
+  }
+
+  #home.fade {
+    opacity: 0;
+  }

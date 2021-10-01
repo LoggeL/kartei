@@ -1,0 +1,27 @@
+{
+  "type": "module",
+  "dependencies": {
+    "express": "^4.17.1",
+    "knex": "^0.95.11",
+    "node-fetch": "^3.0.0",
+    "sqlite3": "^5.0.2"
+  },
+  "name": "kartei",
+  "description": "Karteikartensystem für CFW",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LoggeL/kartei.git"
+  },
+  "author": "Logge",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LoggeL/kartei/issues"
+  },
+  "homepage": "https://github.com/LoggeL/kartei#readme"
+}
