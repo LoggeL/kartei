@@ -3,19 +3,38 @@ html, body, main, .container {
 }
 
 #landing {
-    opacity: 1;
-    transition: opacity 1s; 
-  }
-  
-  #landing.fade {
-    opacity: 0;
-  }
+  opacity: 1;
+  transition: opacity 1s; 
+}
 
-  #home {
-    opacity: 1;
-    transition: opacity 1s; 
-  }
+#landing.fade {
+  opacity: 0;
+}
 
-  #home.fade {
-    opacity: 0;
-  }
+#home {
+  opacity: 1;
+  transition: opacity 1s; 
+}
+
+#home.fade {
+  opacity: 0;
+}
+
+#gameWordEnglish {
+  filter: blur(0px);
+  transition: filter .5s; 
+}
+
+.blur {
+  filter: blur(20px) !important;
+}
+
+.fade-out {
+  opacity: 0;
+  transition: opacity .5s; 
+}
+
+.fade-in {
+  opacity: 1;
+  transition: opacity .5s; 
+}

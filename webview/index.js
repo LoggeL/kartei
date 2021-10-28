@@ -2,7 +2,7 @@ const landingTitle = document.getElementById('landingTitle');
 const landing = document.getElementById('landing');
 
 const returnDate = localStorage.getItem('returning');
-const returning = returnDate ? (Date.now() - returnDate) < 24 * 60 * 60 * 1000 : false;
+const returning = returnDate ? (Date.now() - returnDate) < 20 * 60 * 60 * 1000 : false;
 
 var typewriter = new Typewriter(landingTitle, {
     loop: false,
@@ -55,20 +55,37 @@ let game = {
     }
 }
 
+const baseWeight = 10
+
+const shuffle = () => Math.random() - .5
+
+const shuffleWeighted = (questionA, questionB) => {
+    const weightA = (questionA.played ? questionA.incorrect / questionA.played * 100 : 1) + baseWeight * Math.random()
+    const weightB = (questionB.played ? questionB.incorrect / questionB.played * 100 : 1) + baseWeight * Math.random()
+    return Math.random() * (weightA + weightB) - weightA
+}
+
 let questions = []
+let allQuestions = []
 
-fetch('/data').then(res => res.json()).then(data => {
-    questions = data
-    console.log(questions)
+fetch('data').then(res => {
+    console.log(res.status)
+    res.json().then(data => {
+        allQuestions = data
+        questions = JSON.parse(JSON.stringify(allQuestions))
+        console.log(questions)
 
-    document.getElementById('statsTotalCards').innerText = questions.length
-    document.getElementById('statsCardsPlayed').innerText = questions.reduce((acc, cur) => acc + cur.played, 0)
-    document.getElementById('statsCardsCorrect').innerText =
-        Math.round(
-            questions.reduce((acc, cur) => acc + cur.correct, 0) / questions.reduce((acc, cur) => acc + cur.incorrect, 1e-9)
-            * 100)
+        document.getElementById('statsTotalCards').innerText = allQuestions.length
+        document.getElementById('statsCardsPlayed').innerText = allQuestions.reduce((acc, cur) => acc + cur.played, 0)
 
-})
+        const correctPlayed = allQuestions.reduce((acc, cur) => acc + cur.correct, 0)
+        const incorrectPlayed = allQuestions.reduce((acc, cur) => acc + cur.incorrect, 0)
+
+        document.getElementById('statsCardsCorrect').innerText =
+            Math.round(correctPlayed / (correctPlayed + incorrectPlayed) * 100)
+        playSmart.disabled = false
+    }).catch(console.error)
+}).catch(console.error)
 
 // Game Vars
 
@@ -78,8 +95,13 @@ const statsGameWord = document.getElementById('statsGameWord')
 const statsGameWordStreak = document.getElementById('statsGameWordStreak')
 const statsGameStreak = document.getElementById('statsGameStreak')
 
-playSmart.addEventListener('click', () => {
+const gameWordGerman = document.getElementById('gameWordGerman')
+const gameWordEnglish = document.getElementById('gameWordEnglish')
+const gameButtonReveal = document.getElementById('gameButtonReveal')
+const gameButtonCorrect = document.getElementById('gameButtonCorrect')
+const gameButtonIncorrect = document.getElementById('gameButtonIncorrect')
 
+playSmart.addEventListener('click', () => {
     game.mode = "smart"
 
     homeView.classList.add('fade')
@@ -89,6 +111,85 @@ playSmart.addEventListener('click', () => {
         homeView.style.display = 'none'
     }, 1000)
 
+    // if (game.mode == "smart") {
+    questions = allQuestions.sort(shuffle).sort(shuffleWeighted)
+    // }
 
-
+    nextQuestion()
 })
+
+function nextQuestion() {
+
+    if (game.question.id) sendAnswer(game.question)
+
+    gameView.classList.add('fade-out')
+    gameWordEnglish.classList.add('blur')
+    setTimeout(() => {
+        gameView.classList.remove('fade-out')
+
+        if (questions.length == 0) questions = allQuestions.sort(shuffle).sort(shuffleWeighted)
+        game.question = questions.shift()
+
+        updateGameStats()
+
+        console.log(game.question)
+
+        gameWordEnglish.innerText = game.question.english
+        gameWordGerman.innerText = game.question.german
+
+        gameButtonReveal.disabled = false
+        gameButtonCorrect.disabled = true
+        gameButtonIncorrect.disabled = true
+
+        setTimeout(() => {
+            gameView.classList.remove('fade-in')
+            gameView.classList.remove('fade-out')
+        }, 500)
+    }, 500)
+}
+
+gameButtonReveal.addEventListener('click', () => {
+    gameButtonReveal.disabled = true
+    gameButtonCorrect.disabled = false
+    gameButtonIncorrect.disabled = false
+
+    gameWordEnglish.classList.remove('blur')
+})
+
+gameButtonCorrect.addEventListener('click', () => {
+    game.question.correct = true
+    game.question.played = true
+    game.question.streak = game.question.streak + 1
+    game.stats.streak = game.stats.streak + 1
+    game.stats.correct = game.stats.correct + 1
+    game.stats.total = game.stats.total + 1
+
+    nextQuestion()
+})
+
+gameButtonIncorrect.addEventListener('click', () => {
+    game.question.correct = false
+    game.question.played = true
+    game.question.streak = 0
+    game.stats.streak = 0
+    game.stats.incorrect = game.stats.incorrect + 1
+    game.stats.total = game.stats.total + 1
+
+    nextQuestion()
+})
+
+function sendAnswer(question) {
+    const vote = question.correct ? 'correct' : 'incorrect'
+    fetch(`judge/${question.id}/${vote}`
+    ).then(res => res.json()).then(data => {
+        console.log(data)
+    }).catch(console.error)
+}
+
+function updateGameStats() {
+    statsGameMode.innerText = game.mode
+    statsGameCategory.innerText = game.question.category
+    statsGameWord.innerText = game.question.played > 0 ? (game.question.correct / game.question.played).toFixed(2) * 100 + '%' : '-%'
+    statsGameWordStreak.innerText = game.question.streak
+    statsGameStreak.innerText = game.stats.streak
+}

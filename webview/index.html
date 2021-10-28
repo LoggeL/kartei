@@ -24,23 +24,26 @@
                 <h1>Kartei</h1>
             </div>
             <div class="col-md-12 d-grid">
-                <button type="button" class="btn btn-primary btn-lg" id="playSmart">Play Smart</button>
+                <button type="button" class="btn btn-primary btn-lg" id="playSmart" disabled>Play Smart</button>
             </div>
-            <div class="col-md-4 d-grid">
+            <div class="col-md-3 d-grid">
                 <button type="button" class="btn btn-primary" id="playCategory">Play Category</button>
             </div>
-            <div class="col-md-4 d-grid">
+            <div class="col-md-3 d-grid">
                 <button type="button" class="btn btn-primary" id="playRandom">Play Random</button>
             </div>
-            <div class="col-md-4 d-grid">
+            <div class="col-md-3 d-grid">
                 <button type="button" class="btn btn-primary" id="showList" disabled>Show List</button>
+            </div>
+            <div class="col-md-3 d-grid">
+                <button type="button" class="btn btn-primary" id="reload">Reload</button>
             </div>
             <div class="col-md-12 d-grid text-start">
                 Stats
                 <ul>
                     <li>Total Cards: <span id="statsTotalCards">?</span></li>
                     <li>Cards played: <span id="statsCardsPlayed">?</span></li>
-                    <li>Correct: <span id="statsCardsCorrect">?</span>%</li>
+                    <li>Ratio: <span id="statsCardsCorrect">?</span>%</li>
                 </ul>
             </div>
         </div>
@@ -61,17 +64,17 @@
                 <h1 id="gameWordGerman">Kartei</h1>
             </div>
             <div class="col-md-6">
-                <h1 id="gameWordEnglish" style="filter:blur(10px)">Kartei</h1>
+                <h1 id="gameWordEnglish" class="blur">Kartei</h1>
             </div>
 
             <div class="col-md-12 d-grid">
-                <button id="gameButtonReveal" type="button" class="btn btn-primary btn-lg">Reveal</button>
+                <button id="gameButtonReveal" type="button" class="btn btn-primary btn-lg" disabled>Reveal</button>
             </div>
             <div class="col-md-6 d-grid">
-                <button id="gameButtonIncorrect" type="button" class="btn btn-danger">Wrong</button>
+                <button id="gameButtonIncorrect" type="button" class="btn btn-danger" disabled>Wrong</button>
             </div>
             <div class="col-md-6 d-grid">
-                <button id="gameButtonCorrect" type="button" class="btn btn-success">Correct</button>
+                <button id="gameButtonCorrect" type="button" class="btn btn-success" disabled>Correct</button>
             </div>
 
 
