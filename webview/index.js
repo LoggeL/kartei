@@ -87,6 +87,15 @@ fetch('data').then(res => {
     }).catch(console.error)
 }).catch(console.error)
 
+const reload = document.getElementById('reload')
+reload.addEventListener('click', async () => {
+    reload.disabled = true
+    await fetch('reload')
+    setTimeout(() => {
+        location.reload()
+    }, 5000)
+})
+
 // Game Vars
 
 const statsGameMode = document.getElementById('statsGameMode')
