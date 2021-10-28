@@ -72,7 +72,7 @@ app.get('/', (req, res) => {
     res.status(200).sendFile(__dirname + '/webview/index.html')
 })
 
-app.get('/update', (req, res) => {
+app.get('/updateDB', (req, res) => {
     if (updating) {
         res.status(400).json({ error: "Already updating" })
     } else {

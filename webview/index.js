@@ -87,10 +87,10 @@ fetch('data').then(res => {
     }).catch(console.error)
 }).catch(console.error)
 
-const reload = document.getElementById('reload')
-reload.addEventListener('click', async () => {
-    reload.disabled = true
-    await fetch('reload')
+const updateDB = document.getElementById('updateDB')
+updateDB.addEventListener('click', async () => {
+    updateDB.disabled = true
+    await fetch('updateDB')
     setTimeout(() => {
         location.reload()
     }, 5000)
