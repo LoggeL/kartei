@@ -1,14 +1,14 @@
-import knex from "knex"
+import knex from 'knex';
 
 const k = knex({
     client: 'sqlite3',
     connection: {
-        filename: "./data.sqlite"
+        filename: './data.sqlite'
     },
     useNullAsDefault: true
 });
 
-; (async () => {
+(async () => {
     await k.schema.createTable('card', function (t) {
         t.increments('id').primary();
         t.string('german');
