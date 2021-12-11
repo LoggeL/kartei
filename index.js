@@ -18,9 +18,11 @@ let data, updating = false
 function updateData() {
     fetch(`https://docs.google.com/spreadsheets/d/${spreadsheetID}/gviz/tq?tqx=out:json`)
         .then(res => res.text())
-        .then(text => {
+        .then(async text => {
             const json = JSON.parse(text.substr(47).slice(0, -2))
             data = json.table.rows.map(row => row.c.map(e => e ? e.v : null))
+
+            await k("card").delete()
 
             let group
             for (let i = 1; i < data.length; i++) {

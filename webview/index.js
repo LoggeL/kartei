@@ -198,7 +198,7 @@ function sendAnswer(question) {
 function updateGameStats() {
     statsGameMode.innerText = game.mode
     statsGameCategory.innerText = game.question.category
-    statsGameWord.innerText = game.question.played > 0 ? (game.question.correct / game.question.played).toFixed(2) * 100 + '%' : '-%'
+    statsGameWord.innerText = game.question.played > 0 ? `(${game.question.correct}/${game.question.played}) ${(game.question.correct / game.question.played).toFixed(2) * 100}%` : '-%'
     statsGameWordStreak.innerText = game.question.streak
     statsGameStreak.innerText = game.stats.streak
 }
