@@ -15,52 +15,6 @@ const k = knex({
 const { spreadsheetID, port } = JSON.parse(fs.readFileSync("./config.json", "utf8"));
 let data, updating = false
 
-function updateData() {
-    fetch(`https://docs.google.com/spreadsheets/d/${spreadsheetID}/gviz/tq?tqx=out:json`)
-        .then(res => res.text())
-        .then(async text => {
-            const json = JSON.parse(text.substr(47).slice(0, -2))
-            data = json.table.rows.map(row => row.c.map(e => e ? e.v : null))
-
-            await k("card").delete()
-
-            let group
-            for (let i = 1; i < data.length; i++) {
-                const row = data[i]
-                if (row[1] == null) {
-                    group = row[0]
-                    continue
-                }
-
-                k("card").select('id').where({
-                    english: row[0],
-                    german: row[1]
-                }).first().then(exists => {
-
-                    if (exists) return
-
-                    k("card").insert({
-                        english: row[0],
-                        german: row[1],
-                        group: group,
-                        category: 'Elementary Vocabulary',
-                        image: row[2],
-                        sentence: row[3],
-                        image: null,
-                        sentence: null,
-                        played: 0,
-                        correct: 0,
-                        incorrect: 0,
-                        streak: 0,
-                        lastPlayed: null
-                    }).then(added => {
-                        console.log('new vocable: ', group, row[0], row[1])
-                    })
-                })
-            }
-        })
-}
-
 const app = express()
 
 app.use(express.static('webview'))
@@ -74,14 +28,62 @@ app.get('/', (req, res) => {
     res.status(200).sendFile(__dirname + '/webview/index.html')
 })
 
-app.get('/updateDB', (req, res) => {
+app.get('/updateDB', async (req, res) => {
     if (updating) {
         res.status(400).json({ error: "Already updating" })
     } else {
-        updating = true
-        updateData()
-        res.status(200).json({ success: 'Updating' })
-    }
+        try {
+            updating = true
+            const r = await fetch(`https://docs.google.com/spreadsheets/d/${spreadsheetID}/gviz/tq?tqx=out:json`)
+            const text = await r.text()
+        
+            const json = JSON.parse(text.substr(47).slice(0, -2))
+            data = json.table.rows.map(row => row.c.map(e => e ? e.v : null))
+
+            await k("card").delete()
+
+            let group
+            for (let i = 1; i < data.length; i++) {
+                const row = data[i]
+                if (row[1] == null) {
+                    group = row[0]
+                    continue
+                }
+
+                const exists = await k("card").select('id').where({
+                    english: row[0],
+                    german: row[1]
+                }).first()
+
+                if (exists) return
+
+                await k("card").insert({
+                    english: row[0],
+                    german: row[1],
+                    group: group,
+                    category: 'Elementary Vocabulary',
+                    image: row[2],
+                    sentence: row[3],
+                    image: null,
+                    sentence: null,
+                    played: 0,
+                    correct: 0,
+                    incorrect: 0,
+                    streak: 0,
+                    lastPlayed: null
+                })
+                  
+                console.log('new vocable: ', group, row[0], row[1])
+                        
+            }
+    
+            updating = false
+            res.status(200).json({ success: 'Updated' })
+        } catch(e) {
+            updating = false
+            res.status(500).json({ error: e.message })
+        }
+}
 })
 
 app.get('/data', async (req, res) => {

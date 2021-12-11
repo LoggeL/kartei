@@ -91,9 +91,7 @@ const updateDB = document.getElementById('updateDB');
 updateDB.addEventListener('click', async () => {
     updateDB.disabled = true;
     await fetch('updateDB');
-    setTimeout(() => {
-        location.reload();
-    }, 5000);
+    location.reload();
 });
 
 // Game Vars
