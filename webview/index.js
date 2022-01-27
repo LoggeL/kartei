@@ -130,7 +130,7 @@ function nextQuestion() {
     if (game.question.id) sendAnswer(game.question);
 
     gameView.classList.add('fade-out');
-    gameWordEnglish.classList.add('blur');
+    gameWordEnglish.classList.add('hide');
     setTimeout(() => {
         gameView.classList.remove('fade-out');
 
@@ -160,7 +160,7 @@ gameButtonReveal.addEventListener('click', () => {
     gameButtonCorrect.disabled = false;
     gameButtonIncorrect.disabled = false;
 
-    gameWordEnglish.classList.remove('blur');
+    gameWordEnglish.classList.remove('hide');
 });
 
 gameButtonCorrect.addEventListener('click', () => {

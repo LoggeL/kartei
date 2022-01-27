@@ -1,10 +1,13 @@
-html, body, main, .container {
-    height: 100%;
+html,
+body,
+main,
+.container {
+  height: 100%;
 }
 
 #landing {
   opacity: 1;
-  transition: opacity 1s; 
+  transition: opacity 1s;
 }
 
 #landing.fade {
@@ -13,7 +16,7 @@ html, body, main, .container {
 
 #home {
   opacity: 1;
-  transition: opacity 1s; 
+  transition: opacity 1s;
 }
 
 #home.fade {
@@ -21,20 +24,20 @@ html, body, main, .container {
 }
 
 #gameWordEnglish {
-  filter: blur(0px);
-  transition: filter .5s; 
+  opacity: 1;
+  transition: opacity 0.5s;
 }
 
-.blur {
-  filter: blur(20px) !important;
+.hide {
+  opacity: 0 !important;
 }
 
 .fade-out {
   opacity: 0;
-  transition: opacity .5s; 
+  transition: opacity 0.5s;
 }
 
 .fade-in {
   opacity: 1;
-  transition: opacity .5s; 
+  transition: opacity 0.5s;
 }
