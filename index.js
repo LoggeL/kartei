@@ -55,7 +55,7 @@ app.get('/updateDB', async (req, res) => {
                     german: row[1]
                 }).first()
 
-                if (exists) return
+                if (exists) return console.log("Duplicate:", row[0], row[1])
 
                 await k("card").insert({
                     english: row[0],
